@@ -70,6 +70,16 @@ static NSString * const kJOINGROUPDEEPLINK = @"mqqapi://card/show_pslcard?src_ty
            universalLink:(nullable NSString *)universalLink
               completion:(nonnull void (^)(FlutterError * _Nullable))completion {
     
+    if (appId && universalLink) {
+        __unused id tencent = [[TencentOAuth alloc] initWithAppId:appId andUniversalLink:universalLink andDelegate:self];
+    } else if (appId) {
+        __unused id tencent = [[TencentOAuth alloc] initWithAppId:appId andDelegate:self];
+    }
+    self.urlSchema = urlSchema;
+    
+    if (completion) {
+        completion(nil);
+    }
 }
 
 - (void)shareWebPageReq:(QQShareWebPage *)req 

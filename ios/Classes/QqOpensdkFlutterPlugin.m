@@ -5,7 +5,7 @@
 @implementation QqOpensdkFlutterPlugin
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
     QQSdkOnRespApi* onRespApi = [[QQSdkOnRespApi alloc] initWithBinaryMessenger:registrar.messenger];
-    QQOpenSdkApiImpl *impl = [[QQOpenSdkApiImpl alloc] init];
+    QQOpenSdkApiImpl *impl = [[QQOpenSdkApiImpl alloc] initWithQQSdkOnRespApi:onRespApi];
     [registrar addApplicationDelegate:(NSObject<FlutterPlugin> *)impl];
     QQOpenSdkApiSetup(registrar.messenger,impl);
 }
