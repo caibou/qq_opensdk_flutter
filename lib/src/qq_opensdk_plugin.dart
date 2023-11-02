@@ -15,4 +15,19 @@ class QQOpenSdkPlugin {
   QQOpenSdkPlugin._() {
     QQSdkOnRespApi.setup(_sdkResp);
   }
+
+  Future<void> registerApp(
+          {required String appId,
+          required String urlSchema,
+          String? universalLink}) =>
+      api.registerApp(appId, urlSchema, universalLink);
+
+  Future<bool> isQQInstalled() => api.isQQInstalled();
+
+  Future<bool> joinQQGroup({required String info}) => api.joinQQGroup(info);
+
+  Future<bool> shareWebPage({required QQShareWebPage req}) =>
+      api.shareWebPage(req);
+
+  Future<bool> shareImage({required QQShareImage req}) => api.shareImage(req);
 }
