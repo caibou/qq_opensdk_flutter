@@ -44,9 +44,11 @@ typedef NS_ENUM(NSUInteger, QQShareRetCode) {
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithTitle:(NSString *)title
     content:(NSString *)content
+    thumbImageUrl:(NSString *)thumbImageUrl
     scene:(QQSceneType)scene;
 @property(nonatomic, copy) NSString * title;
 @property(nonatomic, copy) NSString * content;
+@property(nonatomic, copy) NSString * thumbImageUrl;
 @property(nonatomic, assign) QQSceneType scene;
 @end
 
@@ -69,10 +71,8 @@ typedef NS_ENUM(NSUInteger, QQShareRetCode) {
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithPageUrl:(NSString *)pageUrl
-    thumbImageUrl:(NSString *)thumbImageUrl
     base:(QQShareBaseModel *)base;
 @property(nonatomic, copy) NSString * pageUrl;
-@property(nonatomic, copy) NSString * thumbImageUrl;
 @property(nonatomic, strong) QQShareBaseModel * base;
 @end
 

@@ -70,6 +70,7 @@ enum class QQShareRetCode(val raw: Int) {
 data class QQShareBaseModel (
   val title: String,
   val content: String,
+  val thumbImageUrl: String,
   val scene: QQSceneType
 
 ) {
@@ -78,14 +79,16 @@ data class QQShareBaseModel (
     fun fromList(list: List<Any?>): QQShareBaseModel {
       val title = list[0] as String
       val content = list[1] as String
-      val scene = QQSceneType.ofRaw(list[2] as Int)!!
-      return QQShareBaseModel(title, content, scene)
+      val thumbImageUrl = list[2] as String
+      val scene = QQSceneType.ofRaw(list[3] as Int)!!
+      return QQShareBaseModel(title, content, thumbImageUrl, scene)
     }
   }
   fun toList(): List<Any?> {
     return listOf<Any?>(
       title,
       content,
+      thumbImageUrl,
       scene.raw,
     )
   }
@@ -125,7 +128,6 @@ data class QQSdkOnResp (
 /** Generated class from Pigeon that represents data sent in messages. */
 data class QQShareWebPage (
   val pageUrl: String,
-  val thumbImageUrl: String,
   val base: QQShareBaseModel
 
 ) {
@@ -133,15 +135,13 @@ data class QQShareWebPage (
     @Suppress("UNCHECKED_CAST")
     fun fromList(list: List<Any?>): QQShareWebPage {
       val pageUrl = list[0] as String
-      val thumbImageUrl = list[1] as String
-      val base = QQShareBaseModel.fromList(list[2] as List<Any?>)
-      return QQShareWebPage(pageUrl, thumbImageUrl, base)
+      val base = QQShareBaseModel.fromList(list[1] as List<Any?>)
+      return QQShareWebPage(pageUrl, base)
     }
   }
   fun toList(): List<Any?> {
     return listOf<Any?>(
       pageUrl,
-      thumbImageUrl,
       base.toList(),
     )
   }

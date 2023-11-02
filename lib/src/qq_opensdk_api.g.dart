@@ -24,6 +24,7 @@ class QQShareBaseModel {
   QQShareBaseModel({
     required this.title,
     required this.content,
+    required this.thumbImageUrl,
     required this.scene,
   });
 
@@ -31,12 +32,15 @@ class QQShareBaseModel {
 
   String content;
 
+  String thumbImageUrl;
+
   QQSceneType scene;
 
   Object encode() {
     return <Object?>[
       title,
       content,
+      thumbImageUrl,
       scene.index,
     ];
   }
@@ -46,7 +50,8 @@ class QQShareBaseModel {
     return QQShareBaseModel(
       title: result[0]! as String,
       content: result[1]! as String,
-      scene: QQSceneType.values[result[2]! as int],
+      thumbImageUrl: result[2]! as String,
+      scene: QQSceneType.values[result[3]! as int],
     );
   }
 }
@@ -95,20 +100,16 @@ class QQSdkOnResp {
 class QQShareWebPage {
   QQShareWebPage({
     required this.pageUrl,
-    required this.thumbImageUrl,
     required this.base,
   });
 
   String pageUrl;
-
-  String thumbImageUrl;
 
   QQShareBaseModel base;
 
   Object encode() {
     return <Object?>[
       pageUrl,
-      thumbImageUrl,
       base.encode(),
     ];
   }
@@ -117,8 +118,7 @@ class QQShareWebPage {
     result as List<Object?>;
     return QQShareWebPage(
       pageUrl: result[0]! as String,
-      thumbImageUrl: result[1]! as String,
-      base: QQShareBaseModel.decode(result[2]! as List<Object?>),
+      base: QQShareBaseModel.decode(result[1]! as List<Object?>),
     );
   }
 }

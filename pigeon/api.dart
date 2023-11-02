@@ -12,9 +12,10 @@ enum QQSceneType { qq, qzone }
 class QQShareBaseModel {
   String title;
   String content;
+  String thumbImageUrl;
   QQSceneType scene;
   QQShareBaseModel(
-      {required this.title, required this.content, required this.scene});
+      {required this.title, required this.content, required this.thumbImageUrl, required this.scene});
 }
 
 enum QQShareRetCode {
@@ -35,7 +36,6 @@ class QQSdkOnResp {
 
 class QQShareWebPage {
   String pageUrl;
-  String thumbImageUrl;
   QQShareBaseModel base;
   QQShareWebPage(
       {required this.pageUrl, required this.thumbImageUrl, required this.base});

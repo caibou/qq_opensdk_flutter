@@ -85,7 +85,7 @@ static NSString * const kJOINGROUPDEEPLINK = @"mqqapi://card/show_pslcard?src_ty
     QQApiNewsObject *obj = [QQApiNewsObject objectWithURL:[NSURL URLWithString:req.pageUrl]
                                        title:req.base.title
                                  description:req.base.content
-                             previewImageURL:[NSURL URLWithString:req.thumbImageUrl]];
+                             previewImageURL:[NSURL URLWithString:req.base.thumbImageUrl]];
     
     [self sendReq:[SendMessageToQQReq reqWithContent:obj] scene:req.base.scene completion:completion];
 }

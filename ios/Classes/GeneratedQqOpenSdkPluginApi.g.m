@@ -73,10 +73,12 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 @implementation QQShareBaseModel
 + (instancetype)makeWithTitle:(NSString *)title
     content:(NSString *)content
+    thumbImageUrl:(NSString *)thumbImageUrl
     scene:(QQSceneType)scene {
   QQShareBaseModel* pigeonResult = [[QQShareBaseModel alloc] init];
   pigeonResult.title = title;
   pigeonResult.content = content;
+  pigeonResult.thumbImageUrl = thumbImageUrl;
   pigeonResult.scene = scene;
   return pigeonResult;
 }
@@ -86,7 +88,9 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
   NSAssert(pigeonResult.title != nil, @"");
   pigeonResult.content = GetNullableObjectAtIndex(list, 1);
   NSAssert(pigeonResult.content != nil, @"");
-  pigeonResult.scene = [GetNullableObjectAtIndex(list, 2) integerValue];
+  pigeonResult.thumbImageUrl = GetNullableObjectAtIndex(list, 2);
+  NSAssert(pigeonResult.thumbImageUrl != nil, @"");
+  pigeonResult.scene = [GetNullableObjectAtIndex(list, 3) integerValue];
   return pigeonResult;
 }
 + (nullable QQShareBaseModel *)nullableFromList:(NSArray *)list {
@@ -96,6 +100,7 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
   return @[
     (self.title ?: [NSNull null]),
     (self.content ?: [NSNull null]),
+    (self.thumbImageUrl ?: [NSNull null]),
     @(self.scene),
   ];
 }
@@ -141,11 +146,9 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 
 @implementation QQShareWebPage
 + (instancetype)makeWithPageUrl:(NSString *)pageUrl
-    thumbImageUrl:(NSString *)thumbImageUrl
     base:(QQShareBaseModel *)base {
   QQShareWebPage* pigeonResult = [[QQShareWebPage alloc] init];
   pigeonResult.pageUrl = pageUrl;
-  pigeonResult.thumbImageUrl = thumbImageUrl;
   pigeonResult.base = base;
   return pigeonResult;
 }
@@ -153,9 +156,7 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
   QQShareWebPage *pigeonResult = [[QQShareWebPage alloc] init];
   pigeonResult.pageUrl = GetNullableObjectAtIndex(list, 0);
   NSAssert(pigeonResult.pageUrl != nil, @"");
-  pigeonResult.thumbImageUrl = GetNullableObjectAtIndex(list, 1);
-  NSAssert(pigeonResult.thumbImageUrl != nil, @"");
-  pigeonResult.base = [QQShareBaseModel nullableFromList:(GetNullableObjectAtIndex(list, 2))];
+  pigeonResult.base = [QQShareBaseModel nullableFromList:(GetNullableObjectAtIndex(list, 1))];
   NSAssert(pigeonResult.base != nil, @"");
   return pigeonResult;
 }
@@ -165,7 +166,6 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 - (NSArray *)toList {
   return @[
     (self.pageUrl ?: [NSNull null]),
-    (self.thumbImageUrl ?: [NSNull null]),
     (self.base ? [self.base toList] : [NSNull null]),
   ];
 }
