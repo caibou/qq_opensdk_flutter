@@ -56,12 +56,10 @@ typedef NS_ENUM(NSUInteger, QQShareRetCode) {
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithType:(NSNumber *)type
-    description:(nullable NSString *)description
     result:(nullable NSString *)result
     extendInfo:(nullable NSString *)extendInfo
     errorDescription:(nullable NSString *)errorDescription;
 @property(nonatomic, strong) NSNumber * type;
-@property(nonatomic, copy, nullable) NSString * description;
 @property(nonatomic, copy, nullable) NSString * result;
 @property(nonatomic, copy, nullable) NSString * extendInfo;
 @property(nonatomic, copy, nullable) NSString * errorDescription;

@@ -174,7 +174,6 @@ static NSString * const kJOINGROUPDEEPLINK = @"mqqapi://card/show_pslcard?src_ty
     if ([resp isKindOfClass:[SendMessageToQQResp class]]) {
         SendMessageToQQResp *qqResp = ((SendMessageToQQResp *)resp);
         QQSdkOnResp *onResp = [QQSdkOnResp makeWithType:@(qqResp.type)
-                                            description:qqResp.description == nil ? @"" : resp.description
                                                  result:qqResp.result == nil ? @"" : qqResp.result
                                              extendInfo:qqResp.extendInfo == nil ? @"" : qqResp.extendInfo
                                        errorDescription:qqResp.errorDescription == nil ? @"" : qqResp.errorDescription];

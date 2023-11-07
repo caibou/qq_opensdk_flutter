@@ -97,7 +97,6 @@ data class QQShareBaseModel (
 /** Generated class from Pigeon that represents data sent in messages. */
 data class QQSdkOnResp (
   val type: Long,
-  val description: String? = null,
   val result: String? = null,
   val extendInfo: String? = null,
   val errorDescription: String? = null
@@ -107,17 +106,15 @@ data class QQSdkOnResp (
     @Suppress("UNCHECKED_CAST")
     fun fromList(list: List<Any?>): QQSdkOnResp {
       val type = list[0].let { if (it is Int) it.toLong() else it as Long }
-      val description = list[1] as String?
-      val result = list[2] as String?
-      val extendInfo = list[3] as String?
-      val errorDescription = list[4] as String?
-      return QQSdkOnResp(type, description, result, extendInfo, errorDescription)
+      val result = list[1] as String?
+      val extendInfo = list[2] as String?
+      val errorDescription = list[3] as String?
+      return QQSdkOnResp(type, result, extendInfo, errorDescription)
     }
   }
   fun toList(): List<Any?> {
     return listOf<Any?>(
       type,
-      description,
       result,
       extendInfo,
       errorDescription,

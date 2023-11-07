@@ -27,7 +27,6 @@ enum QQShareRetCode {
 
 class QQSdkOnResp {
   int type;
-  String? description;
   String? result;
   String? extendInfo;
   String? errorDescription;

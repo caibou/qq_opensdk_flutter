@@ -108,13 +108,11 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 
 @implementation QQSdkOnResp
 + (instancetype)makeWithType:(NSNumber *)type
-    description:(nullable NSString *)description
     result:(nullable NSString *)result
     extendInfo:(nullable NSString *)extendInfo
     errorDescription:(nullable NSString *)errorDescription {
   QQSdkOnResp* pigeonResult = [[QQSdkOnResp alloc] init];
   pigeonResult.type = type;
-  pigeonResult.description = description;
   pigeonResult.result = result;
   pigeonResult.extendInfo = extendInfo;
   pigeonResult.errorDescription = errorDescription;
@@ -124,10 +122,9 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
   QQSdkOnResp *pigeonResult = [[QQSdkOnResp alloc] init];
   pigeonResult.type = GetNullableObjectAtIndex(list, 0);
   NSAssert(pigeonResult.type != nil, @"");
-  pigeonResult.description = GetNullableObjectAtIndex(list, 1);
-  pigeonResult.result = GetNullableObjectAtIndex(list, 2);
-  pigeonResult.extendInfo = GetNullableObjectAtIndex(list, 3);
-  pigeonResult.errorDescription = GetNullableObjectAtIndex(list, 4);
+  pigeonResult.result = GetNullableObjectAtIndex(list, 1);
+  pigeonResult.extendInfo = GetNullableObjectAtIndex(list, 2);
+  pigeonResult.errorDescription = GetNullableObjectAtIndex(list, 3);
   return pigeonResult;
 }
 + (nullable QQSdkOnResp *)nullableFromList:(NSArray *)list {
@@ -136,7 +133,6 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 - (NSArray *)toList {
   return @[
     (self.type ?: [NSNull null]),
-    (self.description ?: [NSNull null]),
     (self.result ?: [NSNull null]),
     (self.extendInfo ?: [NSNull null]),
     (self.errorDescription ?: [NSNull null]),

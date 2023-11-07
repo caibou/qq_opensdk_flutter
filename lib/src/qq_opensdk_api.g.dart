@@ -59,15 +59,12 @@ class QQShareBaseModel {
 class QQSdkOnResp {
   QQSdkOnResp({
     required this.type,
-    this.description,
     this.result,
     this.extendInfo,
     this.errorDescription,
   });
 
   int type;
-
-  String? description;
 
   String? result;
 
@@ -78,7 +75,6 @@ class QQSdkOnResp {
   Object encode() {
     return <Object?>[
       type,
-      description,
       result,
       extendInfo,
       errorDescription,
@@ -89,10 +85,9 @@ class QQSdkOnResp {
     result as List<Object?>;
     return QQSdkOnResp(
       type: result[0]! as int,
-      description: result[1] as String?,
-      result: result[2] as String?,
-      extendInfo: result[3] as String?,
-      errorDescription: result[4] as String?,
+      result: result[1] as String?,
+      extendInfo: result[2] as String?,
+      errorDescription: result[3] as String?,
     );
   }
 }
