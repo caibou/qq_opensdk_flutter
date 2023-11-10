@@ -17,6 +17,7 @@ static NSString * const kJOINGROUPDEEPLINK = @"mqqapi://card/show_pslcard?src_ty
 @property (nonatomic, strong) QQSdkOnRespApi *onRespApi;
 @property (nonatomic, strong) NSString *appID;
 @property (nonatomic, strong) NSString *urlSchema;
+@property (nonatomic, strong) NSString *universalLink;
 
 @end
 
@@ -69,13 +70,15 @@ static NSString * const kJOINGROUPDEEPLINK = @"mqqapi://card/show_pslcard?src_ty
                urlSchema:(nonnull NSString *)urlSchema
            universalLink:(nullable NSString *)universalLink
               completion:(nonnull void (^)(FlutterError * _Nullable))completion {
+    self.appID  = appId;
+    self.urlSchema = urlSchema;
+    self.universalLink = universalLink;
     
     if (appId && universalLink) {
         __unused id tencent = [[TencentOAuth alloc] initWithAppId:appId andUniversalLink:universalLink andDelegate:self];
     } else if (appId) {
         __unused id tencent = [[TencentOAuth alloc] initWithAppId:appId andDelegate:self];
     }
-    self.urlSchema = urlSchema;
     
     if (completion) {
         completion(nil);
