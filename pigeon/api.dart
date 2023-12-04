@@ -15,7 +15,10 @@ class QQShareBaseModel {
   String thumbImageUrl;
   QQSceneType scene;
   QQShareBaseModel(
-      {required this.title, required this.content, required this.thumbImageUrl, required this.scene});
+      {required this.title,
+      required this.content,
+      required this.thumbImageUrl,
+      required this.scene});
 }
 
 enum QQShareRetCode {
@@ -36,8 +39,7 @@ class QQSdkOnResp {
 class QQShareWebPage {
   String pageUrl;
   QQShareBaseModel base;
-  QQShareWebPage(
-      {required this.pageUrl, required this.thumbImageUrl, required this.base});
+  QQShareWebPage({required this.pageUrl, required this.base});
 }
 
 class QQShareImage {
@@ -63,6 +65,9 @@ abstract class QQOpenSdkApi {
 
   @async
   bool shareImage(QQShareImage req);
+
+  @async
+  String qqAuth();
 }
 
 @FlutterApi()

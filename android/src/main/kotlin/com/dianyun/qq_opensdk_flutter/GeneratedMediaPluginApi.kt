@@ -214,6 +214,7 @@ interface QQOpenSdkApi {
   fun joinQQGroup(qqGroupInfo: String, callback: (Result<Boolean>) -> Unit)
   fun shareWebPage(req: QQShareWebPage, callback: (Result<Boolean>) -> Unit)
   fun shareImage(req: QQShareImage, callback: (Result<Boolean>) -> Unit)
+  fun qqAuth(callback: (Result<String>) -> Unit)
 
   companion object {
     /** The codec used by QQOpenSdkApi. */
@@ -309,6 +310,24 @@ interface QQOpenSdkApi {
             val args = message as List<Any?>
             val reqArg = args[0] as QQShareImage
             api.shareImage(reqArg) { result: Result<Boolean> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.qq_opensdk_flutter.QQOpenSdkApi.qqAuth", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.qqAuth() { result: Result<String> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(wrapError(error))

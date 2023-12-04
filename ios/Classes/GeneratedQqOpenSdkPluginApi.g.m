@@ -346,6 +346,23 @@ void QQOpenSdkApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<QQOp
       [channel setMessageHandler:nil];
     }
   }
+  {
+    FlutterBasicMessageChannel *channel =
+      [[FlutterBasicMessageChannel alloc]
+        initWithName:@"dev.flutter.pigeon.qq_opensdk_flutter.QQOpenSdkApi.qqAuth"
+        binaryMessenger:binaryMessenger
+        codec:QQOpenSdkApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(qqAuthWithCompletion:)], @"QQOpenSdkApi api (%@) doesn't respond to @selector(qqAuthWithCompletion:)", api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        [api qqAuthWithCompletion:^(NSString *_Nullable output, FlutterError *_Nullable error) {
+          callback(wrapResult(output, error));
+        }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
 }
 @interface QQSdkOnRespApiCodecReader : FlutterStandardReader
 @end

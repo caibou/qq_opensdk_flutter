@@ -6,11 +6,15 @@
 //
 
 #import "QQOpenSdkApiImpl.h"
+#import "QQOpenSdkConstant.h"
 #import <TencentOpenAPI/TencentOAuth.h>
 #import <TencentOpenAPI/QQApiInterface.h>
 #import <TencentOpenAPI/QQApiInterfaceObject.h>
 
+#define KQQLoginCompletionCallBack @"kQQLoginCompletionCallBack"
+
 static NSString * const kJOINGROUPDEEPLINK = @"mqqapi://card/show_pslcard?src_type=internal&version=1&uin=%@&key=%@&card_type=group&source=external";
+typedef void (^completion_t)(NSString *_Nullable, FlutterError *_Nullable);
 
 @interface QQOpenSdkApiImpl()<TencentSessionDelegate,QQApiInterfaceDelegate>
 
@@ -18,10 +22,20 @@ static NSString * const kJOINGROUPDEEPLINK = @"mqqapi://card/show_pslcard?src_ty
 @property (nonatomic, strong) NSString *appID;
 @property (nonatomic, strong) NSString *urlSchema;
 @property (nonatomic, strong) NSString *universalLink;
+@property (nonatomic, strong) TencentOAuth* tencentOAuth;
+@property (nonatomic, strong) NSMutableDictionary<NSString *, completion_t> *replyDict;
 
 @end
 
 @implementation QQOpenSdkApiImpl
+
+- (NSMutableDictionary<NSString *, completion_t> *)replyDict {
+    if (!_replyDict) {
+        [self setReplyDict:[NSMutableDictionary dictionary]];
+    }
+
+    return _replyDict;
+}
 
 - (instancetype)initWithQQSdkOnRespApi:(QQSdkOnRespApi *)onRespApi {
     self = [super init];
@@ -75,11 +89,11 @@ static NSString * const kJOINGROUPDEEPLINK = @"mqqapi://card/show_pslcard?src_ty
     self.universalLink = universalLink;
     
     if (appId && universalLink) {
-        __unused id tencent = [[TencentOAuth alloc] initWithAppId:appId andUniversalLink:universalLink andDelegate:self];
+        self.tencentOAuth = [[TencentOAuth alloc] initWithAppId:appId andUniversalLink:universalLink andDelegate:self];
     } else if (appId) {
-        __unused id tencent = [[TencentOAuth alloc] initWithAppId:appId andDelegate:self];
+        self.tencentOAuth = [[TencentOAuth alloc] initWithAppId:appId andDelegate:self];
     }
-    
+
     if (completion) {
         completion(nil);
     }
@@ -121,6 +135,21 @@ static NSString * const kJOINGROUPDEEPLINK = @"mqqapi://card/show_pslcard?src_ty
     [self sendReq:[SendMessageToQQReq reqWithContent:obj] scene:req.base.scene completion:completion];
 }
 
+// qq 登录申请
+- (void)qqAuthWithCompletion:(nonnull void (^)(NSString *_Nullable, FlutterError *_Nullable))completion {
+    // 防止 retain cycle
+    __weak typeof(self) _self = self;
+    // 调起 qq 在 tencentDidLogin 中回调获取token返回
+    [[self replyDict] setValue:completion forKey:KQQLoginCompletionCallBack];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        __strong typeof(_self) self = _self;
+        if(self) {
+            [self authCallBack:nil error:[self authRet:RET_COMMON]];
+        }
+    });
+    [self.tencentOAuth authorize:@[kOPEN_PERMISSION_GET_INFO, kOPEN_PERMISSION_GET_USER_INFO, kOPEN_PERMISSION_GET_SIMPLE_USER_INFO]];
+}
+
 - (void)sendReq:(QQBaseReq *)req 
           scene:(QQSceneType)scene
      completion:(void (^)(NSNumber *_Nullable, FlutterError *_Nullable))completion {
@@ -151,15 +180,40 @@ static NSString * const kJOINGROUPDEEPLINK = @"mqqapi://card/show_pslcard?src_ty
 
 #pragma mark -TencentSessionDelegate
 - (void)tencentDidLogin {
-    
+    NSString* qqToken = self.tencentOAuth.accessToken;
+    if(qqToken != nil && qqToken.length > 0) {
+        [self authCallBack:qqToken error:nil];
+    } else {
+        [self authCallBack:nil error:[self authRet:RET_COMMON]];
+    }
 }
 
 - (void)tencentDidNotLogin:(BOOL)cancelled { 
-    
+    if(cancelled) {
+        // 取消登录
+        [self authCallBack:nil error:[self authRet:RET_USERCANCEL]];
+    } else {
+        // 登录失败
+        [self authCallBack:nil error:[self authRet:RET_COMMON]];
+    }
 }
 
 - (void)tencentDidNotNetWork { 
-    
+    [self authCallBack:nil error:[self authRet:RET_COMMON]];
+}
+
+- (void)authCallBack:(NSString *)response error:(FlutterError *_Nullable)error {
+    completion_t reply = [[self replyDict] objectForKey:KQQLoginCompletionCallBack];
+
+    if (reply) {
+        reply(response, error);
+        [[self replyDict] removeObjectForKey:KQQLoginCompletionCallBack];
+    }
+}
+
+- (FlutterError *_Nullable) authRet:(TencentRetCode) code {
+    FlutterError *_Nullable error = [FlutterError errorWithCode:NSStringFromTencentRetCode(code) message:nil details:nil];
+    return error;
 }
 
 #pragma mark -QQApiInterfaceDelegate
@@ -193,7 +247,7 @@ static NSString * const kJOINGROUPDEEPLINK = @"mqqapi://card/show_pslcard?src_ty
         [QQApiInterface handleOpenURL:url delegate:self];
         return [TencentOAuth HandleOpenURL:url];
     }
-    return YES;
+    return NO;
 }
 
 - (BOOL)application:(UIApplication*)application
@@ -210,7 +264,7 @@ static NSString * const kJOINGROUPDEEPLINK = @"mqqapi://card/show_pslcard?src_ty
             }
         }
     }
-    return YES;
+    return NO;
 }
 
 @end

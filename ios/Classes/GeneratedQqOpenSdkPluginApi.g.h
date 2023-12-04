@@ -92,6 +92,7 @@ NSObject<FlutterMessageCodec> *QQOpenSdkApiGetCodec(void);
 - (void)joinQQGroupQqGroupInfo:(NSString *)qqGroupInfo completion:(void (^)(NSNumber *_Nullable, FlutterError *_Nullable))completion;
 - (void)shareWebPageReq:(QQShareWebPage *)req completion:(void (^)(NSNumber *_Nullable, FlutterError *_Nullable))completion;
 - (void)shareImageReq:(QQShareImage *)req completion:(void (^)(NSNumber *_Nullable, FlutterError *_Nullable))completion;
+- (void)qqAuthWithCompletion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
 @end
 
 extern void QQOpenSdkApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<QQOpenSdkApi> *_Nullable api);

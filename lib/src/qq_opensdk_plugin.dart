@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/services.dart';
+import 'package:qq_opensdk_flutter/qq_opensdk_flutter.dart';
 import 'package:qq_opensdk_flutter/src/qq_opensdk_resp_callback.dart';
 
 import 'qq_opensdk_api.g.dart';
@@ -30,4 +32,8 @@ class QQOpenSdkPlugin {
       api.shareWebPage(req);
 
   Future<bool> shareImage({required QQShareImage req}) => api.shareImage(req);
+
+  Future<String> qqAuth() => api.qqAuth().onError((error, stackTrace) =>
+      throw SignInWithQQException.fromPlatformException(
+          (error as PlatformException)));
 }
