@@ -1,12 +1,13 @@
 //
 //  QQOpenSdkConstant.h
-//  Pods
+//  qq_opensdk_flutter
 //
-//  Created by kyros He on 2023/12/5.
+//  Created by kyros He on 2023/12/6.
 //
 
-#ifndef QQOpenSdkConstant_h
-#define QQOpenSdkConstant_h
+#import <Foundation/Foundation.h>
+
+NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSInteger, TencentRetCode) {
     // 网络请求成功发送至服务器，并且服务器返回数据格式正确
@@ -18,23 +19,10 @@ typedef NS_ENUM(NSInteger, TencentRetCode) {
     RET_USERCANCEL = -2,
 };
 
-NSString * NSStringFromTencentRetCode(TencentRetCode code) {
-    switch (code) {
-        case RET_SUCCESS:
-            return @"RET_SUCCESS";
+@interface QQOpenSdkConstant : NSObject
 
-        case RET_FAILED:
-            return @"RET_FAILED";
++ (NSString *)NSStringFromTencentRetCode:(TencentRetCode)code;
 
-        case RET_COMMON:
-            return @"RET_COMMON";
+@end
 
-        case RET_USERCANCEL:
-            return @"RET_USERCANCEL";
-
-        default:
-            return @"Unknown Code";
-    }
-}
-
-#endif /* QQOpenSdkConstant_h */
+NS_ASSUME_NONNULL_END

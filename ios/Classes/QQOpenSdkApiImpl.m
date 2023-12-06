@@ -212,7 +212,7 @@ typedef void (^completion_t)(NSString *_Nullable, FlutterError *_Nullable);
 }
 
 - (FlutterError *_Nullable) authRet:(TencentRetCode) code {
-    FlutterError *_Nullable error = [FlutterError errorWithCode:NSStringFromTencentRetCode(code) message:nil details:nil];
+    FlutterError *_Nullable error = [FlutterError errorWithCode:[QQOpenSdkConstant NSStringFromTencentRetCode:code] message:nil details:nil];
     return error;
 }
 
